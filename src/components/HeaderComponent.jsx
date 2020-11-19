@@ -7,11 +7,18 @@ class HeaderComponent extends Component {
         this.state = {
             term: ''
         }
+        this.onSearch = this.onSearch.bind(this);
     }
 
-    findCoursesTerm(term){
-        //this.props.history.push(`/courses?query=${term}`)
-     }
+    onSearch = (e)=>{
+        e.preventDefault();
+        props.onSearch(e.target["term"].value);
+    }
+
+
+    // findCoursesTerm(term){
+    //     this.props.history.push(`/courses?query=${term}`)
+    //  }
 
 
     render() {
@@ -37,13 +44,13 @@ class HeaderComponent extends Component {
                             </li>
                         </ul>
 
-                        <form class="form-inline my-2 my-lg-0" method="GET">
-                            <input name="query"
+                        <form class="form-inline my-2 my-lg-0" onSubmit={onSearch}>
+                            <input name={"term"}
                                 class="form-control mr-sm-2"
                                 type="text"
                                 placeholder="Search"
                                 aria-label="Search" />
-                            <button class="btn btn-outline-success my-2 my-sm-0" onClick={this.findCoursesTerm(this.state.term)}>Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </form>
                     </div>
                 </div>

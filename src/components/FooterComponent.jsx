@@ -10,8 +10,11 @@ class FooterComponent extends Component {
 
     render() {
         return (
-            <div>
-                <footer className="text-white bg-dark" style={{position:"absolute", left:"0", bottom:"0", right:"0"}}>
+            <div style={{ position: 'absolute',
+                bottom: '0',
+                width: '100%',
+                height: '2.5rem'}}>
+                <div className="text-white bg-dark">
                     <div className="container text-center">
                         <div className="row" style={{marginLeft: "300px"}}>
                             <div className="col-md-3 col-lg-4 col-xl-3">
@@ -31,7 +34,7 @@ class FooterComponent extends Component {
                             </div>
                         </div>
                     </div>
-                </footer>
+                </div>
             </div>
         );
     }

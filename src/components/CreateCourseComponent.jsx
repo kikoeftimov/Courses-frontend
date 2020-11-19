@@ -133,7 +133,7 @@ class CreateCourseComponent extends Component {
             return <h3 className="text-center">Update course</h3>
         }
         else{
-            return <h3 className="text-center">Add course</h3>
+            return <h3 className="text-center">Add new course</h3>
         }
     }
 
@@ -167,8 +167,8 @@ class CreateCourseComponent extends Component {
                                             value={this.state.price} onChange={this.changePriceHandler} />
                                     </div>
 
-                                    <div className="form-group col-md-6">
-                                                <label className="text-white">Select File :</label>
+                                    <div className="form-group" style={{width: '300px'}}>
+                                                <label>Select File :</label>
                                                 <input type="file" className="form-control" name="imageBase64" onChange={this.handleInputChange} />
                                                 <img src={this.state.imageBase64} alt={this.state.name} />
                                     </div>
@@ -196,8 +196,6 @@ class CreateCourseComponent extends Component {
                                             onChange={this.changeAuthorHandler}
                                         />
                                 </div>
-
-
                                     <button className="btn btn-success" onClick={this.saveOrUpdateEmployee}>Save</button>
                                     <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Cancel</button>
                                 </form>
@@ -205,6 +203,7 @@ class CreateCourseComponent extends Component {
                         </div>
                     </div>
                 </div>
+                <br />
             </div>
         );
     }

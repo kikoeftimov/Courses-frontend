@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
 import CoursesService from '../services/CoursesService';
+import AuthService from '../services/AuthService';
+import ShoppingCartService from '../services/ShoppingCartService';
 
 class ListCoursesComponent extends Component {
     constructor(props){
         super(props)
         this.state = {
-            courses: []
+            courses: [],
+            showModeratorBoard: false,
+            showAdminBoard: false,
+            currentUser: undefined,
         }
         
         this.addCourse = this.addCourse.bind(this);
         this.updateCourse = this.updateCourse.bind(this);
         this.deleteCourse = this.deleteCourse.bind(this);
         this.detailsCourse = this.detailsCourse.bind(this);
+        this.addToCart = this.addToCart.bind(this);
+        this.deleteFromCart = this.deleteFromCart.bind(this);
     }
 
     componentDidMount(){
@@ -19,6 +26,16 @@ class ListCoursesComponent extends Component {
             this.setState({ courses: res.data });
             console.log(this.state.courses);
         });
+
+        const user = AuthService.getCurrentUser();
+
+        if (user) {
+            this.setState({
+                currentUser: user,
+                showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
+                showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+            });
+        }
     }
 
     addCourse(){
@@ -39,16 +56,35 @@ class ListCoursesComponent extends Component {
         this.props.history.push(`/view-course/${id}`);
     }
 
+    addToCart(id){
+        ShoppingCartService.addCourseToCart(id).then( () => {
+            alert(`Course added to cart!`);
+            this.props.history.push('/');
+        });
+    }
+
+    deleteFromCart(id){
+        ShoppingCartService.removeCourseFromCart(id).then( () => {
+            alert(`Course removed from cart!`);
+            this.props.history.push('/');
+        });
+    }
+
 
     render() {
+        const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+
         return (
             <div>
                 <h2 className="text-center mt-5">Courses list</h2>
-                <div className="row">
-                    <button className="btn btn-primary" onClick={this.addCourse}> Add new course</button>
-                </div>
+                {showAdminBoard && (
+                         <div className="row">
+                            <button className="btn btn-primary" onClick={this.addCourse}> Add new course</button>
+                         </div>
+                )}
+               
                 <div className="row mt-4">
-                    <table className="table table-striped">
+                    <table className="table table-striped table-bordered">
 
                         <thead>
                             <tr>
@@ -71,20 +107,30 @@ class ListCoursesComponent extends Component {
                                         <td>{course.description}</td>
                                         <td>{course.price} $</td>
                                         <td>
-                                            <img src={course.imageBase64} alt="" />
+                                            <img src={course.imageBase64} alt="" style={{width: '150px', height: '100px'}}/>
                                         </td>
                                         <td>{course.category.name}</td>
                                         <td>{course.author.firstName} {course.author.lastName}</td>
                                         <td>
-                                            <button className="btn btn-success" 
-                                                    onClick={() => this.updateCourse(course.id)}>Update
-                                            </button>
-                                            <button className="btn btn-danger" 
-                                                    style={{marginLeft: '10px'}} onClick={() => this.deleteCourse(course.id)}>Delete
-                                            </button>
+                                            {showAdminBoard && (
+                                                <span>
+                                                    <button className="btn btn-secondary" 
+                                                        onClick={() => this.updateCourse(course.id)}>Update
+                                                    </button>
+                                                    <button className="btn btn-danger" 
+                                                        style={{marginLeft: '10px'}} onClick={() => this.deleteCourse(course.id)}>Delete
+                                                    </button>
+                                                </span>
+                                            )}
+                                           
                                             <button className="btn btn-primary"
                                                     style={{marginLeft: '10px'}} onClick={() => this.detailsCourse(course.id)}>Details
                                              </button>
+                                             {currentUser && (
+                                                <button className="btn btn-success"
+                                                    style={{marginLeft: '10px'}} onClick={() => this.addToCart(course.id)}>Add to cart
+                                                </button>
+                                             )}
                                         </td>
                                     </tr>
                                 )

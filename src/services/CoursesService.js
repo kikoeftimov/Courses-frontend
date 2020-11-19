@@ -25,7 +25,7 @@ class CoursesService{
     }
 
     getCourseWithParams(term){
-        return axios.get(COURSES_API_URL + '?' + term);
+        return axios.get(`COURSES_API_URL + '?' + term=${term}`);
     }
 }
 
