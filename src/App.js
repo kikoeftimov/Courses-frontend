@@ -42,9 +42,6 @@ import AuthService from "./services/AuthService";
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import Profile from "./components/ProfileComponent";
-import BoardUser from "./components/BoardUserComponent";
-import BoardModerator from "./components/BoardModeratorComponent";
-import BoardAdmin from "./components/BoardAdminComponent";
 import ListCoursesComponent from "./components/ListCoursesComponent";
 import ViewCourseComponent from "./components/ViewCourseComponent";
 import CreateCourseComponent from "./components/CreateCourseComponent";
@@ -58,7 +55,6 @@ class App extends Component {
     this.logOut = this.logOut.bind(this);
 
     this.state = {
-      showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
       terms: [],
@@ -72,7 +68,6 @@ class App extends Component {
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
@@ -92,7 +87,7 @@ class App extends Component {
 
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showAdminBoard } = this.state;
 
     return (
       <div style={{position: 'relative', minHeight: '100vh'}}>
@@ -107,14 +102,6 @@ class App extends Component {
                   Courses
                 </Link>
           </li>
-
-            {/* {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )} */}
 
             {/* {showAdminBoard && (
               <li className="nav-item">
@@ -192,9 +179,6 @@ class App extends Component {
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/charge" component={ShoppingCartComponent} />
-            <Route path="/user" component={BoardUser} />
-            <Route path="/mod" component={BoardModerator} />
-            <Route path="/admin" component={BoardAdmin} />
           </Switch>
         </div>
         <FooterComponent />

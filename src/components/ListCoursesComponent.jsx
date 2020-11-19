@@ -8,7 +8,6 @@ class ListCoursesComponent extends Component {
         super(props)
         this.state = {
             courses: [],
-            showModeratorBoard: false,
             showAdminBoard: false,
             currentUser: undefined,
         }
@@ -32,7 +31,6 @@ class ListCoursesComponent extends Component {
         if (user) {
             this.setState({
                 currentUser: user,
-                showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
                 showAdminBoard: user.roles.includes("ROLE_ADMIN"),
             });
         }
@@ -72,7 +70,7 @@ class ListCoursesComponent extends Component {
 
 
     render() {
-        const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+        const { currentUser, showAdminBoard } = this.state;
 
         return (
             <div>

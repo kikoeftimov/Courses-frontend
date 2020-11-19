@@ -3,8 +3,6 @@ import ShoppingCartService from '../services/ShoppingCartService';
 import StripeButton from "./StripeButtonComponent";
 import "./Checkout.css";
 
-
-
 class ShoppingCartComponent extends Component {
     constructor(props){
         super(props)

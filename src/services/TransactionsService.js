@@ -6,10 +6,6 @@ class TransactionsService {
     getTransactions(){
         return axios.get(TRANSACTIONS_API_URL);
     }
-
-    exportTransactions(){
-        return axios.get(TRANSACTIONS_API_URL + "/export")
-    }
 }
 
 export default new TransactionsService()

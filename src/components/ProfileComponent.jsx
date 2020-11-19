@@ -44,7 +44,7 @@ class Profile extends Component {
 
     return (
       <div className="container">
-        {(this.state.userReady && currentUser.username=="admin") ?
+        {(this.state.userReady && currentUser.username==="admin") ?
         <div>
           <h1>
             <strong>{currentUser.username}</strong> profile
