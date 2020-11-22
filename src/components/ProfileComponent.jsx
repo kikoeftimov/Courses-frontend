@@ -78,6 +78,7 @@ class Profile extends Component {
                       <th>Date</th>
                       <th>User</th>
                       <th>ShoppingCart</th>
+                      <th>Courses</th>
                   </tr>
               </thead>
 
@@ -91,6 +92,7 @@ class Profile extends Component {
                               <td>{transaction.localDateTime}</td>
                               <td>{this.state.currentUser.username}</td>
                               <td>{transaction.shoppingCart.status}</td>
+                              <td>[{transaction.names.toString()}]</td>
                           </tr>
                       )
                   }

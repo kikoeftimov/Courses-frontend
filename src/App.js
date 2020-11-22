@@ -122,7 +122,7 @@ class App extends Component {
             {currentUser && (
               <li className="nav-item">
                 <Link to={"/charge"} className="nav-link">
-                  Card
+                  Cart
                 </Link>
               </li>
             )}
