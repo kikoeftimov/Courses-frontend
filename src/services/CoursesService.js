@@ -24,8 +24,8 @@ class CoursesService{
         return axios.delete(COURSES_API_URL + '/' + id);
     }
 
-    getCourseWithParams(term){
-        return axios.get(`COURSES_API_URL + '?' + term=${term}`);
+    getCourseWithParams(searchText){
+        return axios.get(`http://localhost:8080/api/courses/search/${searchText}`);
     }
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CoursesService from '../services/CoursesService';
 import ShoppingCartService from '../services/ShoppingCartService';
+import AuthService from '../services/AuthService';
 
 
 class ViewCourseComponent extends Component {
@@ -10,7 +11,8 @@ class ViewCourseComponent extends Component {
             id: this.props.match.params.id,
             course: {},
             category: {},
-            author: {}
+            author: {},
+            currentUser: undefined,
         }
         this.addToCart = this.addToCart.bind(this);
 
@@ -22,16 +24,28 @@ class ViewCourseComponent extends Component {
             this.setState({ category: res.data.category});
             this.setState({ author: res.data.author});
         });
+
+        const user = AuthService.getCurrentUser();
+
+        if (user) {
+            this.setState({
+                currentUser: user,
+                showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+            });
+        }
     }
 
     addToCart(id){
         ShoppingCartService.addCourseToCart(id).then( () => {
             alert(`Course added to cart!`);
             this.props.history.push('/charge');
+        }).catch(err => {
+            alert(`Course already in cart!`);
         });
     }
 
     render() {
+        const { currentUser} = this.state;
         return (
             <div>
                 <div className="container">
@@ -65,12 +79,14 @@ class ViewCourseComponent extends Component {
                                 </div>
                             </div>
                             <br/>
+                            {currentUser && (
                             <div className="row">
                                 <div className="col-sm-12">
                                         <button className="btn btn-success" onClick={() => this.addToCart(this.state.course.id)}>Add to cart
                                         </button>
                                 </div>
                             </div>
+                            )}
                         </div>
                     </div>
                 </div>

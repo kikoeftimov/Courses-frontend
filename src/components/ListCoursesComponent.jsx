@@ -1,15 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import axios from '../axios/AxiosHelper';
+import {Button, InputGroup, FormControl} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import CoursesService from '../services/CoursesService';
 import AuthService from '../services/AuthService';
 import ShoppingCartService from '../services/ShoppingCartService';
 
 class ListCoursesComponent extends Component {
     constructor(props){
-        super(props)
+        super(props);
         this.state = {
             courses: [],
             showAdminBoard: false,
             currentUser: undefined,
+            search: '',
         }
         
         this.addCourse = this.addCourse.bind(this);
@@ -18,6 +23,10 @@ class ListCoursesComponent extends Component {
         this.detailsCourse = this.detailsCourse.bind(this);
         this.addToCart = this.addToCart.bind(this);
         this.deleteFromCart = this.deleteFromCart.bind(this);
+        this.submitCourse = this.submitCourse.bind(this);
+        this.searchChange = this.searchChange.bind(this);
+        this.cancelSearch = this.cancelSearch.bind(this);
+        this.searchData = this.searchData.bind(this);
     }
 
     componentDidMount(){
@@ -58,6 +67,8 @@ class ListCoursesComponent extends Component {
         ShoppingCartService.addCourseToCart(id).then( () => {
             alert(`Course added to cart!`);
             this.props.history.push('/');
+        }).catch(err => {
+            alert(`Course already in cart!`);
         });
     }
 
@@ -68,9 +79,45 @@ class ListCoursesComponent extends Component {
         });
     }
 
+    submitCourse(courses){
+        this.setState({ courses: courses});
+    }
+
+    searchChange = event => {
+        this.setState({
+          [event.target.name] : event.target.value,
+        });
+      };
+    
+      searchData = () => {
+        if(this.state.search !== ''){
+          axios.get(`/api/courses/search/${this.state.search}`)
+          .then((res) => {
+            this.setState({courses: res.data});
+            console.log(this.state.courses);
+          }); 
+        }
+        else{
+            axios.get("/api/courses")
+              .then((res) => {
+                this.setState({ courses: res.data });
+                console.log(this.state.courses);
+              });
+          }    
+      }
+    
+      cancelSearch = () => {
+        this.setState({"search" : ''});
+        axios.get("/api/courses")
+            .then((res) => {
+              this.setState({ courses: res.data });
+              console.log(this.state.courses);
+            });
+      };
+
 
     render() {
-        const { currentUser, showAdminBoard } = this.state;
+        const { currentUser, showAdminBoard, search } = this.state;
 
         return (
             <div>
@@ -78,8 +125,26 @@ class ListCoursesComponent extends Component {
                 {showAdminBoard && (
                          <div className="row">
                             <button className="btn btn-primary" onClick={this.addCourse}> Add new course</button>
+                            <div style={{marginLeft: '760px'}}>
+                                <InputGroup size="sm" style={{marginTop: '5px'}}>
+                                <FormControl placeholder="Search" 
+                                    name="search" 
+                                    value={search} 
+                                    className={"bg-white text-dark"}
+                                    onChange={this.searchChange}/>
+                                <InputGroup.Append>
+                                    <Button size="sm"  variant="outline-info" type="button" onClick={this.searchData}>
+                                    <FontAwesomeIcon icon={faSearch}/>
+                                    </Button>
+                                    <Button size="sm"  variant="outline-danger" type="button" onClick={this.cancelSearch} style={{marginLeft: '5px'}}>
+                                    <FontAwesomeIcon icon={faTimes} />
+                                    </Button>
+                                </InputGroup.Append>
+                                </InputGroup>
+                            </div>
                          </div>
                 )}
+              
                
                 <div className="row mt-4">
                     <table className="table table-striped table-bordered">
@@ -103,7 +168,7 @@ class ListCoursesComponent extends Component {
                                     <tr key= {course.id}>
                                         <td><a onClick={() => this.detailsCourse(course.id)} href={course.id}>{course.name}</a></td>
                                         <td>{course.description}</td>
-                                        <td>{course.price} $</td>
+                                        <td>{course.price}$</td>
                                         <td>
                                             <img src={course.imageBase64} alt="" style={{width: '150px', height: '100px'}}/>
                                         </td>
@@ -112,21 +177,23 @@ class ListCoursesComponent extends Component {
                                         <td>
                                             {showAdminBoard && (
                                                 <span>
-                                                    <button className="btn btn-secondary" 
+                                                    <button className="btn btn-secondary"  style={{marginLeft: '10px', width: '110px'}}
                                                         onClick={() => this.updateCourse(course.id)}>Update
                                                     </button>
                                                     <button className="btn btn-danger" 
-                                                        style={{marginLeft: '10px'}} onClick={() => this.deleteCourse(course.id)}>Delete
+                                                        style={{marginLeft: '10px', width: '110px', marginTop: '5px'}} 
+                                                        onClick={() => this.deleteCourse(course.id)}>Delete
                                                     </button>
                                                 </span>
                                             )}
                                            
                                             <button className="btn btn-primary"
-                                                    style={{marginLeft: '10px'}} onClick={() => this.detailsCourse(course.id)}>Details
+                                                    style={{marginLeft: '10px', width: '110px', marginTop: '5px'}} 
+                                                    onClick={() => this.detailsCourse(course.id)}>Details
                                              </button>
                                              {currentUser && (
                                                 <button className="btn btn-success"
-                                                    style={{marginLeft: '10px'}} onClick={() => this.addToCart(course.id)}>Add to cart
+                                                style={{marginLeft: '10px', width: '110px', marginTop: '5px'}} onClick={() => this.addToCart(course.id)}>Add to cart
                                                 </button>
                                              )}
                                         </td>

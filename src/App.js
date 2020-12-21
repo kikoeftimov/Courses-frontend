@@ -45,7 +45,6 @@ import Profile from "./components/ProfileComponent";
 import ListCoursesComponent from "./components/ListCoursesComponent";
 import ViewCourseComponent from "./components/ViewCourseComponent";
 import CreateCourseComponent from "./components/CreateCourseComponent";
-import CoursesService from "./services/CoursesService";
 import ShoppingCartComponent from "./components/ShoppingCartComponent";
 import FooterComponent from "./components/FooterComponent";
 
@@ -57,9 +56,7 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       currentUser: undefined,
-      terms: [],
     };
-    this.searchData = this.searchData.bind(this);
   }
 
   componentDidMount() {
@@ -71,23 +68,14 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
-  }
+   }
 
   logOut() {
     AuthService.logout();
   }
 
-  searchData = (term) => {
-    CoursesService.getCourseWithParams(term).then((response)=>{
-        this.setState({
-            terms: response.data
-        });
-    });
-}
-
-
   render() {
-    const { currentUser, showAdminBoard } = this.state;
+    const { currentUser, showAdminBoard} = this.state;
 
     return (
       <div style={{position: 'relative', minHeight: '100vh'}}>
@@ -133,14 +121,31 @@ class App extends Component {
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
-              <form className="form-inline my-2 my-lg-0" onSubmit={this.searchData}>
+              {/* <form className="form-inline my-2 my-lg-0" onSubmit={this.searchData}>
                             <input name={"term"}
                                 className="form-control mr-sm-2"
                                 type="text"
                                 placeholder="Search"
                                 aria-label="Search" />
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
+              </form> */}
+              {/* <div>
+                <InputGroup size="sm" style={{marginTop: '5px'}}>
+                  <FormControl placeholder="Search" 
+                    name="search" 
+                    value={search} 
+                    className={"bg-dark text-white"}
+                    onChange={this.searchChange}/>
+                  <InputGroup.Append>
+                    <Button size="sm"  variant="outline-info" type="button" onClick={this.searchData}>
+                      <FontAwesomeIcon icon={faSearch}/>
+                    </Button>
+                    <Button size="sm"  variant="outline-danger" type="button" onClick={this.cancelSearch} style={{marginLeft: '5px'}}>
+                      <FontAwesomeIcon icon={faTimes} />
+                    </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              </div> */}
               <li className="nav-item">
                 <Link to={"/profile"} className="nav-link">
                   {currentUser.username}
